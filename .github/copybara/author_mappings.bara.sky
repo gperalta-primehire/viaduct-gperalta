@@ -1,0 +1,2 @@
+# Default author for unmapped contributors
+DEFAULT_AUTHOR = "Copybara sync <copybara@bot.com>"
