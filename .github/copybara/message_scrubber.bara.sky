@@ -1,0 +1,63 @@
+def strip_commit_body_keep_metadata_from_message(message):
+    """Strip commit body but preserve pre-determined set of metadata starting from Merged-by"""
+    allowed_metadata = set(["Github-Change-Id", "Co-authored-by", "GitOrigin-RevId"])
+
+    lines = message.split("\n")
+
+    # Single line commit - return as is
+    if len(lines) <= 1:
+        return message
+
+    # Get the title (first line)
+    title = lines[0]
+
+    # Find where metadata starts (line starting with "Merged-by")
+    metadata_start = -1
+    for i, line in enumerate(lines):
+        if line.strip().startswith("Merged-by:"):
+            metadata_start = i
+            break
+
+    # If no metadata found, return just the title
+    if metadata_start == -1:
+        return title
+
+    # Get all lines from metadata start onwards
+    metadata_lines = lines[metadata_start:]
+
+    # Filter out Merged-by and Reviewed-by lines
+    filtered_metadata = []
+    for line in metadata_lines:
+        stripped = line.strip()
+        metadata_splits = stripped.split(":", 1)  # split from first encounter of ':', ignore rest.
+        if len(metadata_splits) != 2:
+            # not in regular metadata format, better to omit.
+            continue
+        metadata_key = metadata_splits[0]
+        if metadata_key in allowed_metadata:
+            filtered_metadata.append(line)
+
+    # If no metadata remains after filtering, return just title
+    if not filtered_metadata:
+        return title
+
+    # Check if all remaining lines are empty
+    has_content = False
+    for line in filtered_metadata:
+        if line.strip():
+            has_content = True
+            break
+
+    if not has_content:
+        return title
+
+    # Return title + empty line + remaining metadata
+    result = title + "\n\n" + "\n".join(filtered_metadata)
+
+    # Clean up any trailing whitespace/newlines
+    return result.rstrip()
+
+def strip_commit_body_keep_metadata(ctx):
+    """Copybara transformation to strip body from commit messages"""
+    cleaned_message = strip_commit_body_keep_metadata_from_message(ctx.message)
+    return ctx.set_message(cleaned_message)
