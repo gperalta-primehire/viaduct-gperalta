@@ -1,0 +1,77 @@
+name: copybara-star-wars
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'demoapps/starwars/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Clone Copybara versión v20250818
+        run: |
+          git clone https://github.com/google/copybara.git
+          cd copybara
+          git checkout v20250818
+          bazel build //java/com/google/copybara
+
+      - name: Set Git identity
+        run: |
+          git config --global user.name "copybara-sync"
+          git config --global user.email "copybara-sync@users.noreply.github.com"
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_ed25519
+
+      - name: Validate copybara file
+        run: |
+          cd copybara
+          ./bazel-bin/java/com/google/copybara/copybara validate ../.github/copybara/copy.bara.sky
+
+      - name: Run Copybara sync
+        run: |
+          cd copybara
+          ./bazel-bin/java/com/google/copybara/copybara ${{ vars.COPYBARA_SUBCOMMAND }} ../.github/copybara/copy.bara.sky sync_to_dest ${{ vars.COPYBARA_FLAG_COMMAND }}
+
+      - name: Checkout main (shallow)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Check successful sync
+        run: |
+          SHA_SRC=$(git rev-parse HEAD:demoapps/starwars)
+
+          git clone --depth=1 --branch sync git@github.com:viaduct-graphql/startwars-copybara-test.git dest
+          cd dest
+
+          SHA_DST=$(git rev-parse HEAD:./)
+
+          echo "Origen:  $SHA_SRC"
+          echo "Target:  $SHA_DST"
+
+          if [ "$SHA_SRC" = "$SHA_DST" ]; then
+            echo "sync successful"
+          else
+            echo "error: SHAs do not match"
+            exit 1
+          fi
