@@ -1,0 +1,21 @@
+load("author_mappings", "DEFAULT_AUTHOR")
+load("message_scrubber", "strip_commit_body_keep_metadata")
+
+core.workflow(
+    name = "sync_to_dest",
+    mode = "ITERATIVE",
+    origin = git.github_origin(
+        url = "git@github.com:gperalta-primehire/viaduct.git",
+        ref = "main",
+    ),
+    destination = git.destination(
+        url = "git@github.com:viaduct-graphql/startwars-copybara-test.git",
+        push = "sync",
+    ),
+    origin_files = glob(["demoapps/starwars/**"]),
+    authoring = authoring.pass_thru(default = DEFAULT_AUTHOR),
+    transformations = [
+        core.move("demoapps/starwars", ""),
+        core.transform([strip_commit_body_keep_metadata]),
+    ]
+)
