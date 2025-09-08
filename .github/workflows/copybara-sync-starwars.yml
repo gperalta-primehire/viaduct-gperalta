@@ -59,7 +59,7 @@ jobs:
       - name: Run Copybara sync
         run: |
           cd copybara
-          ./bazel-bin/java/com/google/copybara/copybara ${{ vars.COPYBARA_SUBCOMMAND }} ../.github/copybara/copy.bara.sky sync_to_dest --init-history
+          ./bazel-bin/java/com/google/copybara/copybara ../.github/copybara/copy.bara.sky sync_to_dest --init-history
 
 
 
