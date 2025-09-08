@@ -21,35 +21,31 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Prepare Bazel caches
-        run: |
-          mkdir -p "$HOME/.cache/bazel-disk" "$HOME/.cache/bazel-repo"
-          
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
-
-      - name: Mount bazel cache
+        
+      - name: Mount bazel cache 
         uses: actions/cache@v4
         with:
-          path: ~/.cache/bazel
+          path: "~/.cache/bazel"
           key: bazel
 
-      - name: Clone Copybara versión v20250818
+      - name: Clone Copybara versión ${{ vars.COPYBARA_VERSION }} # Example: v20250818
         run: |
           git clone https://github.com/google/copybara.git
           cd copybara
-          git checkout v20250818
+          git checkout ${{ vars.COPYBARA_VERSION }}
           bazel build //java/com/google/copybara
 
       - name: Set Git identity
         run: |
-          git config --global user.name "copybara-sync"
-          git config --global user.email "copybara-sync@users.noreply.github.com"
+          git config --global user.name "viaductbot"
+          git config --global user.email "viaductbot@users.noreply.github.com"
 
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY_SYNC_STARWARS }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
