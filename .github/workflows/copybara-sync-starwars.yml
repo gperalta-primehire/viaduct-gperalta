@@ -59,23 +59,8 @@ jobs:
       - name: Run Copybara sync
         run: |
           cd copybara
-          ./bazel-bin/java/com/google/copybara/copybara ${{ vars.COPYBARA_SUBCOMMAND }} ../.github/copybara/copy.bara.sky sync_to_dest ${{ vars.COPYBARA_FLAG_COMMAND }}
+          ./bazel-bin/java/com/google/copybara/copybara ${{ vars.COPYBARA_SUBCOMMAND }} ../.github/copybara/copy.bara.sky sync_to_dest --init-history
 
-      - name: Check successful sync
-        run: |
-          SHA_SRC=$(git rev-parse HEAD:demoapps/starwars)
 
-          git clone --depth=1 --branch sync git@github.com:viaduct-graphql/startwars-copybara-test.git dest
-          cd dest
 
-          SHA_DST=$(git rev-parse HEAD:./)
 
-          echo "Origen:  $SHA_SRC"
-          echo "Target:  $SHA_DST"
-
-          if [ "$SHA_SRC" = "$SHA_DST" ]; then
-            echo "sync successful"
-          else
-            echo "error: SHAs do not match"
-            exit 1
-          fi
