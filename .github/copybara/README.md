@@ -1,4 +1,4 @@
-# copybara-star-wars
+# Copybara Starwars Sync
 
 ---
 
