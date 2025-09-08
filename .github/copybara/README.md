@@ -2,27 +2,20 @@
 
 ---
 
-Syncs demoapps/starwars from this repo to viaduct-graphql/starwars on branch sync using Copybara. The job validates the config, builds Copybara, runs the sync, then verifies source vs destination SHAs.
+## Requirements
+
+For the sync user perform the following steps:
+1)  Create a single sync user with read access to the source repo (https://github.com/airbnb/viaduct) and write access to the target repo (https://github.com/viaduct-graphql/starwars).
+2)  Generate an SSH key pair for the sync user on their machine, then add the public key in GitHub: GitHub → Profile → Settings → SSH and GPG keys → New SSH key.
+3)  In the source repo settings (https://github.com/airbnb/viaduct/settings), go to Secrets and variables → Actions and create:
+3.1) Secret DEPLOY_KEY_SYNC_STARWARS → the SSH private key of the sync user.
+3.2) Variable COPYBARA_VERSION → e.g., v20250818.
 
 ## Triggers
 
 On push to main
 
 Only when files under demoapps/starwars/** change
-
-## Requirements
-
-Secrets
-
-- DEPLOY_KEY_SYNC_STARWARS: SSH private key with write access to the destination repo. Add the public key as a Deploy key in the destination and enable Allow write access.
-
-Repository Variables (Settings → Actions → Variables)
-
-Vars
-
-- COPYBARA_VERSION (e.g., v20250818)
-
-- COPYBARA_SUBCOMMAND (optional; e.g., version)
 
 ## Copybara file
 
@@ -36,13 +29,13 @@ Vars
 
 - Clone and build Copybara at COPYBARA_VERSION.
 
-- Set Git identity and SSH (uses DEPLOY_KEY).
+- Set Git identity and SSH (uses DEPLOY_KEY_SYNC_STARWARS).
 
 - copybara validate the .sky file.
 
 - Run Copybara:
 
-    copybara $COPYBARA_SUBCOMMAND .github/copybara/copy.bara.sky sync_to_dest $COPYBARA_FLAG_COMMAND
+    copybara  .github/copybara/copy.bara.sky sync_to_dest
 
 ## Troubleshooting
 
