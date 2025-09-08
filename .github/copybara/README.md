@@ -2,6 +2,10 @@
 
 ---
 
+Syncs demoapps/starwars from this repo to viaduct-graphql/starwars on branch sync using Copybara. The job validates the config, builds Copybara and then runs the sync
+
+---
+
 ## Requirements
 
 For the sync user perform the following steps:
