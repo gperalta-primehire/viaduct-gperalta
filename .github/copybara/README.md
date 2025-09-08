@@ -2,7 +2,7 @@
 
 ---
 
-Syncs demoapps/starwars from this repo to viaduct-graphql/startwars-copybara-test on branch sync using Copybara. The job validates the config, builds Copybara, runs the sync, then verifies source vs destination SHAs.
+Syncs demoapps/starwars from this repo to viaduct-graphql/starwars on branch sync using Copybara. The job validates the config, builds Copybara, runs the sync, then verifies source vs destination SHAs.
 
 ## Triggers
 
