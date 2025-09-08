@@ -21,8 +21,17 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Prepare Bazel caches
+        run: |
+          mkdir -p "$HOME/.cache/bazel-disk" "$HOME/.cache/bazel-repo"
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Mount bazel cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/bazel
+          key: bazel
 
       - name: Clone Copybara versión v20250818
         run: |
