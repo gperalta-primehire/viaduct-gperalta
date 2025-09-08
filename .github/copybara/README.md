@@ -24,8 +24,6 @@ Vars
 
 - COPYBARA_SUBCOMMAND (optional; e.g., version)
 
-- COPYBARA_FLAG_COMMAND (optional; e.g., --init-history for first run)
-
 ## Copybara file
 
 .github/copybara/copy.bara.sky defining workflow sync_to_dest, e.g. moving demoapps/starwars to the destination root.
@@ -46,13 +44,6 @@ Vars
 
     copybara $COPYBARA_SUBCOMMAND .github/copybara/copy.bara.sky sync_to_dest $COPYBARA_FLAG_COMMAND
 
-
-- Verify sync by comparing:
-
-## First run
-
-Set COPYBARA_FLAG_COMMAND=--init-history to seed history if needed.
-
 ## Troubleshooting
 
 Ensure branch sync exists or Copybara is allowed to create it.
@@ -60,5 +51,3 @@ Ensure branch sync exists or Copybara is allowed to create it.
 Confirm core.move("demoapps/starwars", "") in copy.bara.sky.
 
 Check that COPYBARA_VERSION is a valid tag in google/copybara.
-
-If SHA check fails, inspect the destination repo contents and Copybara logs.
