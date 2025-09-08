@@ -2,7 +2,7 @@
 
 ---
 
-Syncs demoapps/starwars from this repo to viaduct-graphql/starwars on branch sync using Copybara. The job validates the config, builds Copybara and then runs the sync
+Syncs demoapps/starwars folder from  airbnb.viaduct repository to viaduct-graphql/starwars repository on main branch using Copybara. The job validates the config, builds Copybara and then runs the sync
 
 ---
 
