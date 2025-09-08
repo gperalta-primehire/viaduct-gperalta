@@ -5,11 +5,11 @@ core.workflow(
     name = "sync_to_dest",
     mode = "ITERATIVE",
     origin = git.github_origin(
-        url = "git@github.com:gperalta-primehire/viaduct.git",
+        url = "git@github.com:airbnb/viaduct.git",
         ref = "main",
     ),
     destination = git.destination(
-        url = "git@github.com:viaduct-graphql/startwars-copybara-test.git",
+        url = "git@github.com:viaduct-graphql/startwars.git",
         push = "sync",
     ),
     origin_files = glob(["demoapps/starwars/**"]),
