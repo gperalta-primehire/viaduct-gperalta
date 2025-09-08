@@ -21,6 +21,9 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
       - name: Clone Copybara versión v20250818
         run: |
           git clone https://github.com/google/copybara.git
