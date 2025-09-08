@@ -61,11 +61,6 @@ jobs:
           cd copybara
           ./bazel-bin/java/com/google/copybara/copybara ${{ vars.COPYBARA_SUBCOMMAND }} ../.github/copybara/copy.bara.sky sync_to_dest ${{ vars.COPYBARA_FLAG_COMMAND }}
 
-      - name: Checkout main (shallow)
-        uses: actions/checkout@v4
-        with:
-          ref: main
-
       - name: Check successful sync
         run: |
           SHA_SRC=$(git rev-parse HEAD:demoapps/starwars)
