@@ -10,7 +10,7 @@ core.workflow(
     ),
     destination = git.destination(
         url = "git@github.com:viaduct-graphql/startwars.git",
-        push = "sync",
+        push = "main",
     ),
     origin_files = glob(["demoapps/starwars/**"]),
     authoring = authoring.pass_thru(default = DEFAULT_AUTHOR),
